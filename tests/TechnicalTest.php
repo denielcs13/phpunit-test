@@ -41,6 +41,7 @@ class TechnicalTest extends PHPUnit_Framework_TestCase
 		$username = 'john';
 		$newPassword = 'N3wpass!9';
 
+		$this->db->expects($this->once())->method('get')->with($username)->willReturn(true);
 		$this->db->expects($this->once())->method('update')->with($username, md5($newPassword));
 
 		ChangePassword ($this->db, $username, $newPassword);
@@ -51,7 +52,7 @@ class TechnicalTest extends PHPUnit_Framework_TestCase
 		// If the new password is shorter than 6 chars, it shouldn't be updated
 
 		$username = 'john';
-		$newPassword = 'N3wpass!9';
+		$newPassword = 'N3wpa'; // N3wpass!9 changed to N3wpa
 
 		$this->db->expects($this->never())->method('update');
 

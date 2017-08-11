@@ -2,7 +2,10 @@
 
 function NewUser ($db, $username, $password)
 {
-	$db->insert ($username, md5($password));
+	// Fix for short password (less than 6)
+	if(mb_strlen($password, 'UTF-8') >= 6) {
+		$db->insert ($username, md5($password));	
+	}
 }
 
 function DeleteUser ($db, $username)
@@ -15,7 +18,9 @@ function DeleteUser ($db, $username)
 
 function ChangePassword ($db, $username, $password)
 {
-	$db->update ($username, $password);
+	if(mb_strlen($password, 'UTF-8') >= 6 && UserExists($db, $username)) {
+		$db->update ($username, md5($password)); // Calling md5 on password resolves testChangePassword	
+	}
 }
 
 function UserExists ($db, $username)
